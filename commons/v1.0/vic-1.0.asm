@@ -117,12 +117,21 @@
 		.label LIGHT_GREEN 	= 13
 		.label LIGHT_BLUE 	= 14
 		.label LIGHT_GRAY 	= 15
+
+		.label BLACK_MC		= BLACK + 8
+		.label WHITE_MC 	= WHITE + 8
+		.label RED_MC 		= RED + 8
+		.label CYAN_MC 		= CYAN + 8
+		.label PURPLE_MC 	= PURPLE + 8
+		.label GREEN_MC 	= GREEN + 8
+		.label BLUE_MC		= BLUE + 8
+		.label YELLOW_MC 	= YELLOW + 8
 	}
 
 	Screen:{
 		.label Control1 = $d011
 		.label RasterLine = $d012 
-		.label Control2 = $d015
+		.label Control2 = $d016
 
 		.label CTRL1_VERTICAL_SCROLL_BITMASK 	= %11111000
 		.label CTRL1_SCREEN_SETUP_BITMASK 		= %10000111
@@ -135,6 +144,18 @@
 		.label CTRL1_SCREEN_MODE_BITMAP			= %00100000
 		.label CTRL1_EXT_BACKGROUND_OFF			= %00000000
 		.label CTRL1_EXT_BACKGROUND_ON			= %01000000
+		
+		.label CTRL1_DEFAULT					= %00011011
+
+		.label CTRL2_HORIZONTAL_SCROLL_BITMASK 	= %11111000
+		.label CTRL2_SCREEN_SETUP_BITMASK 		= %11100111
+
+		.label CTRL2_SCREEN_WIDTH_38 			= %00000000
+		.label CTRL2_SCREEN_WIDTH_40 			= %00001000
+		.label CTRL2_MULTICOLOR_OFF	 			= %00000000
+		.label CTRL2_MULTICOLOR_ON	 			= %00010000
+
+		.label CTRL2_DEFAULT					= %11001000
 	}
 
 	Memory:{
@@ -208,6 +229,34 @@
 	bne !-
 }
 
+.macro Vic_FillColorRam(value) {
+	lda #value
+	ldx #0
+!:
+	sta Vic.COLOR_RAM_ADDR, x
+	sta Vic.COLOR_RAM_ADDR + $100, x
+	sta Vic.COLOR_RAM_ADDR + $200, x
+	sta Vic.COLOR_RAM_ADDR + $300, x
+	inx
+	bne !-
+}
+
+.macro Vic_SetBackgoundColors(bg0Color, bg1Color, bg2Color, bg3Color) {
+	lda #bg0Color
+	sta Vic.Color.Background0
+	lda #bg1Color
+	sta Vic.Color.Background1
+	lda #bg2Color
+	sta Vic.Color.Background2
+	lda #bg3Color
+	sta Vic.Color.Background3
+}
+
+.macro Vic_SetBorderColor(color) {
+	lda #color
+	sta Vic.Color.Border
+}
+
 .macro Vic_SetLSBRasterLine(value) {
 	lda #value
 	sta Vic.Screen.RasterLine
@@ -273,6 +322,12 @@
 	and #Vic.Screen.CTRL1_SCREEN_SETUP_BITMASK
 	ora #mask
 	sta Vic.Screen.Control1
+}
+
+.macro Vic_WaitNextRasteLine(){
+	lda Vic.Screen.RasterLine
+	cmp Vic.Screen.RasterLine
+	beq *-3
 }
 
 .macro Vic_WaitLSBRasterLine(line) {
