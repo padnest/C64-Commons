@@ -21,44 +21,44 @@
 	}
 
 	Sprite1: {
-		.label PosX = $d000
-		.label PosY = $d001
+		.label PosX = $d002
+		.label PosY = $d003
 		.label Color = $d028
 	}
 
 	Sprite2: {
-		.label PosX = $d002
-		.label PosY = $d003
+		.label PosX = $d004
+		.label PosY = $d005
 		.label Color = $d029
 	}
 
 	Sprite3: {
-		.label PosX = $d004
-		.label PosY = $d005
+		.label PosX = $d006
+		.label PosY = $d007
 		.label Color = $d02a
 	}
 
 	Sprite4: {
-		.label PosX = $d006
-		.label PosY = $d007
+		.label PosX = $d008
+		.label PosY = $d009
 		.label Color = $d02b
 	}
 
 	Sprite5: {
-		.label PosX = $d008
-		.label PosY = $d009
+		.label PosX = $d00a
+		.label PosY = $d00b
 		.label Color = $d02c
 	}
 
 	Sprite6: {
-		.label PosX = $d00a
-		.label PosY = $d00b
+		.label PosX = $d00c
+		.label PosY = $d00d
 		.label Color = $d02d
 	}
 
 	Sprite7: {
-		.label PosX = $d000
-		.label PosY = $d001
+		.label PosX = $d00e
+		.label PosY = $d00f
 		.label Color = $d02e
 	}
 
