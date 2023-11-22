@@ -208,12 +208,6 @@
 	asl	Vic.Interrupts.Status
 }
 
-.macro Vic_ClearMSBRasterLine() {
-	lda Vic.Screen.Control1
-	and #$7f
-	sta Vic.Screen.Control1
-}
-
 .macro Vic_EnableInterrupts(mask) {
 	lda #mask
 	sta Vic.Interrupts.Enabled
@@ -259,6 +253,19 @@
 	sta Vic.Color.Border
 }
 
+.macro Vic_SetRasterLine(value) {
+	lda #<value
+	sta Vic.Screen.RasterLine
+	lda Vic.Screen.Control1
+	.if(value > 255){
+		ora #$80
+	}
+	else{
+		and #$7f
+	}
+	sta Vic.Screen.Control1
+}
+
 .macro Vic_SetLSBRasterLine(value) {
 	lda #value
 	sta Vic.Screen.RasterLine
@@ -267,6 +274,12 @@
 .macro Vic_SetMSBRasterLine() {
 	lda Vic.Screen.Control1
 	ora #$80
+	sta Vic.Screen.Control1
+}
+
+.macro Vic_ClearMSBRasterLine() {
+	lda Vic.Screen.Control1
+	and #$7f
 	sta Vic.Screen.Control1
 }
 
