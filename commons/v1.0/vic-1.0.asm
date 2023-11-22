@@ -13,6 +13,8 @@
 	.label SCREEN_ADDR = $0400
 	.label SPRITE_DATA_PTR_DELTA = $03f8
 	.label COLOR_RAM_ADDR = $d800
+	.label SPRITES_POS_BASE_ADDR = $d000
+	.label SPRITES_COLOR_BASE_ADDR = $d027 
 
 	Sprite0: {
 		.label PosX = $d000
@@ -273,6 +275,10 @@
 	sta screenAddr + Vic.SPRITE_DATA_PTR_DELTA + spriteNum
 }
 
+.macro Vic_SetSpriteDataAddrByRegA(screenAddr, spriteNum) {
+	sta screenAddr + Vic.SPRITE_DATA_PTR_DELTA + spriteNum
+}
+
 .macro Vic_SetSpriteFrame(screenAddr, spriteNum, dataAddr, frameNum){
 	lda #[dataAddr/64 + frameNum]
 	sta screenAddr + Vic.SPRITE_DATA_PTR_DELTA + spriteNum
@@ -285,7 +291,7 @@
 
 .macro Vic_SetSpritePosX(spriteNum, posX){
 	lda #<posX
-	sta Vic.Sprite0.PosX + spriteNum*2
+	sta Vic.SPRITES_POS_BASE_ADDR + spriteNum*2
 	lda Vic.Sprites.PosX
 	.if(posX > 255){
 		ora #[pow(2, spriteNum)]
@@ -296,14 +302,38 @@
 	sta Vic.Sprites.PosX
 }
 
+.macro Vic_SetSpritePosXLByRegA(spriteNum){
+	sta Vic.SPRITES_POS_BASE_ADDR + spriteNum*2
+}
+
+.macro Vic_SetSpritePosXHBit(spriteNum){
+	lda Vic.Sprites.PosX
+	ora #[pow(2, spriteNum)]
+	sta Vic.Sprites.PosX
+}
+
+.macro Vic_ClearSpritePosXHBit(spriteNum){
+	lda Vic.Sprites.PosX
+	and #[255 - pow(2, spriteNum)] 
+	sta Vic.Sprites.PosX
+}
+
 .macro Vic_SetSpritePosY(spriteNum, posY){
 	lda #<posY
-	sta Vic.Sprite0.PosY + spriteNum*2
+	sta Vic.SPRITES_POS_BASE_ADDR + spriteNum*2 + 1
+}
+
+.macro Vic_SetSpritePosYByRegA(spriteNum){
+	sta Vic.SPRITES_POS_BASE_ADDR + spriteNum*2 + 1
 }
 
 .macro Vic_SetSpriteColor(spriteNum, color){
 	lda #color
-	sta Vic.Sprite0.Color + spriteNum
+	sta Vic.SPRITES_COLOR_BASE_ADDR + spriteNum
+}
+
+.macro Vic_SetSpriteColorByRegA(spriteNum){
+	sta Vic.SPRITES_COLOR_BASE_ADDR + spriteNum
 }
 
 .macro Vic_SetSpriteEnabled(spriteNum, state) {
@@ -314,6 +344,18 @@
 	else{
 		and #[255 - pow(2, spriteNum)]
 	}
+	sta Vic.Sprites.Enabled
+}
+
+.macro Vic_SetSpriteEnabledBit(spriteNum) {
+	lda Vic.Sprites.Enabled
+	ora #[pow(2, spriteNum)]
+	sta Vic.Sprites.Enabled
+}
+
+.macro Vic_ClearSpriteEnabledBit(spriteNum) {
+	lda Vic.Sprites.Enabled
+	and #[255 - pow(2, spriteNum)]
 	sta Vic.Sprites.Enabled
 }
 
