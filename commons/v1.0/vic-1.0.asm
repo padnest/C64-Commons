@@ -372,6 +372,29 @@
 	sta Vic.Sprites.Enabled
 }
 
+.macro Vic_SetSpritePriority(spriteNum, state) {
+	lda Vic.Sprites.Priority
+	.if(state){
+		ora #[pow(2, spriteNum)]
+	}
+	else{
+		and #[255 - pow(2, spriteNum)]
+	}
+	sta Vic.Sprites.Priority
+}
+
+.macro Vic_SetSpritePriorityBit(spriteNum) {
+	lda Vic.Sprites.Priority
+	ora #[pow(2, spriteNum)]
+	sta Vic.Sprites.Priority
+}
+
+.macro Vic_ClearSpritePrioritydBit(spriteNum) {
+	lda Vic.Sprites.Priority
+	and #[255 - pow(2, spriteNum)]
+	sta Vic.Sprites.Priority
+}
+
 .macro Vic_ScreenSetup(mask) {
 	lda Vic.Screen.Control1
 	and #Vic.Screen.CTRL1_SCREEN_SETUP_BITMASK
