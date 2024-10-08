@@ -19,6 +19,8 @@
 		.label BANK_OUT_BASIC 				= %00000110
 		.label BASIC_AND_KERNAL				= %00000111
 
+		.label BANK_OUT_IO	 				= %00000011
+
 		.label BITMASK 						= %11111000
 	}
 

@@ -161,7 +161,7 @@
 	}
 
 	Memory:{
-		.label Setup = $d018
+		.label Config = $d018
 
 		// CHR_1000 and CHR_1800 in VIC bank #0 ($0000) and #2 ($4000) select Character ROM instead.
 		.label CHR_0000 = %00000000
